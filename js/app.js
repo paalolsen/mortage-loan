@@ -1,4 +1,4 @@
-var loanApp = angular.module('loan', ['ngRoute']);
+var loanApp = angular.module('loan', ['ngRoute', 'ngMessages']);
  
 loanApp.config(function($routeProvider) {
     
@@ -9,8 +9,30 @@ loanApp.config(function($routeProvider) {
         .otherwise(         {redirectTo: '/home'});
 });
 
+// !!!NOT USED!!! <error-field error-variable="years"></error-field>
+loanApp.directive('errorField', function(){
+    
+    return {
+    
+        scope: {
+        
+        },
+        restrict: 'E',
+        replace: true,
+        link: function(scope, elem, attr) {
+            
+            scope.errorVar = attr.errorVariable;
+            
+            scope.getLayout() = function() {
+                return 'pages/directive/error_tmpl_1.html'; 
+            };
+        }, 
+        template: '<div ng-include="getLayout()"></div>' 
+    }
+    
+});
 
-loanApp.directive('testField', ['$log', function($log/*$parse*/) {
+loanApp.directive('testField', ['$log', '$parse', function($log, $parse) {
   return {
     require: 'ngModel',
     link: function(scope, elem, attr, ngModel) {
@@ -19,45 +41,104 @@ loanApp.directive('testField', ['$log', function($log/*$parse*/) {
           return ngModel.$modelValue;
       }, function (value) {
          
-         //var model = attr.ngModel;
+         var fieldName      = attr.name;
          
-         var testType       = attr.testFieldType;
-         var testMinSize    = attr.testFieldMinSize;
-         var testMaxSize    = attr.testFieldMaxSize;
+         var testType       = attr.testFieldType;       // "INTEGER"
+         var testMinSize    = attr.testFieldMinSize;    // Minimum number
+         var testMaxSize    = attr.testFieldMaxSize;    // Maximum number
+         var testSize       = attr.testFieldSize;       // Maximum number
+         var testLength     = attr.testFieldLength;     // String length
          
          
-         alert(testType + ' ' + testMinSize + ' ' + testMaxSize);
+         $log.info(testType + ' ' + testMinSize + ' ' + testMaxSize + ' ' + value);
+         
+         var error;
+         var errors = [];
          
          // INTEGER/TEXT
-         if(attr.testFieldType != undefined) {
-             $log.info('IsInteger?: ' + testForType(testType, value));
-             $log.info('TYPE-TEST ' + value+ '->attr.testFieldType: ' + attr.testFieldType);
+         if( testType != undefined) {
+             
+             error = testForType(value, testType);
+             
+             if(error != "OK")
+             {
+                 errors.push(error);
+                 $log.info('error pushed: ' + error);
+             }
          }
          // MIN SIZE
-         if(attr.testFieldMinSize != undefined) {
-            $log.info('MIN-SIZE: ' + value+ '->attr.testFieldMinSize: ' +attr.testFieldMinSize);
+         if(testMinSize != undefined ) {
+             
+            error = testForSize(value, testMinSize, ">");
+             
+            if(error != "OK")
+             {
+                 errors.push(error);
+                 $log.info('error pushed: ' + error);
+             }
          }         
          // MAX SIZE
-         if(attr.testFieldMaxSize != undefined) {
-             $log.info('MAX-SIZE: ' + value+ '->attr.testFieldMaxLength: ' + attr.testFieldMaxLength);
+         if(attr.testFieldMaxSize != undefined ) {
+            
+             error = testForSize(value, testMaxSize, "<");
+            
+             if(error != "OK")
+             {
+                 errors.push(error);
+                 $log.info('error pushed: ' + error);
+             }
+         } 
+         
+         scope[(fieldName+'Error')] = [];    
+         if(errors.length > 0)
+         {
+            scope[(fieldName+'Error')] = errors;             
          }
          
+         ngModel.$parsers.unshift(function (value) {             
+            
+             ngModel.$setValidity( (fieldName+'Error'), errors.length == 0);
+
+             return value;
+          });
      
-      })
-        
-      function testForType(type, value) {
-        alert(value + ' -- ' + type);
-         if(type.toUpperCase === "INTEGER"){ 
-             alert(value);
-            return Number(parseFloat(value))==value;
+      })      
+     
+      function testForType(value, type) {
+          
+        if(type.toUpperCase() === "INTEGER"){              
+            return Number(parseFloat(value))==value ? 'OK': 'You must enter a number'; 
          }
-         
+          
+        //.... ++ other types, can include format attribute as well
+          
+        return 'Type ' + type + ' is wrong';           
       }
     
-      function testForLengt(variable, length, isMax) {
-     
-         
-      }       
+      function testForSize(value, size, operator) {
+            
+          if(operator === ">")
+              return parseFloat(value) > size ? "OK" : "Number should be larger than " + size;
+          if(operator === "<")
+              return parseFloat(value) < size ? "OK" : "Number should be lower than " + size;
+          if(operator === "=")
+              return parseFloat(value) < size ? "OK" : "Number should be equal to " + size;
+          
+          return 'Operator ' + operator + ' is not valid';         
+      }  
+        
+      function testForLength(value, length, operator) {
+        
+          if(operator === ">")
+              return value.length > length ? "OK" : "Text should be longer than " + size;
+          if(operator === "<")
+              return value.length < length ? "OK" : "Text should be shorter than " + size;
+          if(operator === "=")
+              return value.length = length ? "OK" : "TExt should be " + size + " long";
+          
+          return 'Operator ' + operator + ' is not valid';  
+              
+      }   
      
     }
   };
@@ -142,7 +223,7 @@ loanApp.controller('LoanCtrl', ['$scope', '$location', 'loanFactory', function($
          $location.path('/home');       
 
     };
-     
+    
     
 }]);
  

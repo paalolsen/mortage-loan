@@ -13,29 +13,78 @@
     <body ng-controller="LoanCtrl">
         
         <form name="loanForm" novalidate>
+            
             <div class="container">
                 <div class="row">
                     <div class="col-md-12"><h1>Calculate your loan</h1></div>
                 </div>
+                
                 <div class="row">
-                    <div class="col-md-3">Loan amount</div>
-                    <div class="col-md-3">
-                        <input type="number" ng-model="amount" name="mount" placeholder="2560000" test-field test-field-type="Integer"/> kr                        
+                    <div class="col-xs-4"><h4>Loan amount (kr)</h4></div>
+                    <div class="col-xs-3">                   
+                         <input type="text" ng-model="amount" name="theamount" placeholder="2560000" test-field test-field-type="Integer" test-field-min-size="10000" test-field-max-size="100000000" required/>    
+                    </div>
+                    <div class="col-xs-3">                        
+                        <!-- Should be sat as an directive -->
+                        <span ng-messages="loanForm.theamount.$error">
+                            <span class="invalid" ng-message="required">required</span>
+                            <span class="invalid" ng-message="theamountError">
+
+                                <div ng-repeat="error in theamountError">
+                                    {{error}}
+                                </div>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-xs-4"><h4>Down payment years (år)</h4></div>
+                    <div class="col-xs-3">
+                        <input type="text" ng-model="years" name="theyears" placeholder="20" test-field test-field-type="Integer" test-field-min-size="10" test-field-max-size="100" required/>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <!-- Should be sat as an directive -->
+                        <span ng-messages="loanForm.theyears.$error">
+                            <span class="invalid" ng-message="required">required</span>
+                            <span class="invalid" ng-message="theyearsError">
+
+                                <div ng-repeat="error in theyearsError">
+                                    {{error}}
+                                </div>
+                            </span>
+                        </span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">Down payment years</div>
-                    <div class="col-md-3"><input type="text" ng-model="years" name="years" placeholder="20" test-field test-field-type="Integer" test-field-max-size="100" test-field-min-size="1"/> kr</div>
+                    <div class="col-xs-4"><h4>Interrest rate (%)</h4></div>
+                    <div class="col-xs-3">
+                        <input type="text" ng-model="rate" name="therate" placeholder="3.45" test-field test-field-type="Integer" test-field-min-size="0" test-field-max-size="20" required/>
+                    </div>
+                    <div class="col-xs-3">                        
+                        <!-- Should be sat as an directive -->
+                        <span ng-messages="loanForm.therate.$error">
+                            <span class="invalid" ng-message="required">required</span>
+                            <span class="invalid" ng-message="therateError">
+
+                                <div ng-repeat="error in therateError">
+                                    {{error}}
+                                </div>
+                            </span>
+                        </span>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">Interrest rate</div>
-                    <div class="col-md-3"><input type="text" ng-model="rate" name="rate" placeholder="3.45" test-field test-field-type="Integer"/> kr</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 col-offset-3 padding-top-10">
-                        <button ng-disabled="loanForm.$invalid" ng-click="calculateLoan()" class="btn btn-info">Calculate</button></div>                
+                    <div class="col-xs-4 padding-top-10">
+                        <!--<button ng-disabled="!loanForm.$valid" ng-click="calculateLoan()" class="btn btn-info">Calculate</button>-->
+                        <!--<button ng-disabled="(theamountError.length != 0 && yearsError.length != 0) && therateError.length != 0" ng-click="calculateLoan()" class="btn btn-info">Calculate</button>-->
+                        <button  ng-click="calculateLoan()" class="btn btn-info">Calculate</button>
+                        
+                    </div>                
                 </div>   
-                       
+                                  
+                
+                
             </div>
         </form>
         
@@ -43,7 +92,9 @@
                 
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-route/angular-route.min.js"></script>
-        <!--<script src="bower_components/bootstrap-css/js/bootstrap.min.js"></script>-->
+        <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+        <script src="bower_components/jQuery/dist/jquery.min.js"></script>
+        <script src="bower_components/bootstrap-css/js/bootstrap.min.js"></script>
         <script src="js/app.js"></script>
 
     </body>

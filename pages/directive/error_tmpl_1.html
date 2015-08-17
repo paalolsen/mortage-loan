@@ -1,0 +1,9 @@
+ <span ng-messages="loanForm.{{errorVar}}.$error">
+    <span class="invalid" ng-message="required">required</span>
+    <span class="invalid" ng-message="{{errorVar}}Error">
+
+        <div ng-repeat="theError in {{errorVar}}Error">
+            {{theError}}
+        </div>
+    </span>
+</span>
