@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="loan">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content=""> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/app.css">
+    </head>
+    <body ng-controller="LoanCtrl">
+        
+        <form name="loanForm" novalidate>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12"><h1>Calculate your loan</h1></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Loan amount</div>
+                    <div class="col-md-3">
+                        <input type="number" ng-model="amount" name="mount" placeholder="2560000" test-field test-field-type="Integer"/> kr                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Down payment years</div>
+                    <div class="col-md-3"><input type="text" ng-model="years" name="years" placeholder="20" test-field test-field-type="Integer" test-field-max-size="100" test-field-min-size="1"/> kr</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">Interrest rate</div>
+                    <div class="col-md-3"><input type="text" ng-model="rate" name="rate" placeholder="3.45" test-field test-field-type="Integer"/> kr</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-offset-3 padding-top-10">
+                        <button ng-disabled="loanForm.$invalid" ng-click="calculateLoan()" class="btn btn-info">Calculate</button></div>                
+                </div>   
+                       
+            </div>
+        </form>
+        
+        <div ng-view></div>    
+                
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
+        <!--<script src="bower_components/bootstrap-css/js/bootstrap.min.js"></script>-->
+        <script src="js/app.js"></script>
+
+    </body>
+</html>
