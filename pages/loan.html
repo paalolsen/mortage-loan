@@ -1,0 +1,33 @@
+<!-- SET AS DIRECTIVE -->
+            
+<div class="container" ng-show="dataResult.amortizationSchedule.length > 0">
+  <h2>Overview of loan</h2>
+  <p>Your montly payment: {{dataResult.amortizationSchedule[0].payment}} kr</p>            
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Fee</th>
+        <th>Interest</th>
+        <th>Principal</th>
+        <th>Balance</th>
+        <th>Tax deduction</th>
+        <th>Payment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="schedule in dataResult.amortizationSchedule">
+        <td>{{schedule.date | dateFilter: 'dd.MM.yyyy'}}</td>
+        <td>{{schedule.fee}}</td>
+        <td>{{schedule.interest}}</td>
+        <td>{{schedule.principal}}</td>
+        <td>{{schedule.balance}}</td>
+        <td>{{schedule.taxDeduction | number: 2}}</td>
+        <td>{{schedule.payment}}</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+<!--<div>TEST -- {{dataResult}} -- TEST</div>-->
