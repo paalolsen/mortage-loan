@@ -171,7 +171,7 @@ loanApp.factory('loanFactory', ['$http', function($http) {
                            "&loanRaisingYear="  + "2015" + 
                            "&principalAmount="  + $scope.amount +
                            "&annualNominalInterestRate=" +  $scope.rate +
-                           "&totalNumberOfPayments=" + $scope.years;    
+                           "&totalNumberOfPayments=" + ($scope.years*12);    
         },
         setUrl: function(urlApi) {
             url = urlApi;
